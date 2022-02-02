@@ -21,10 +21,10 @@ def create_db():
 
 
     # drop if exists database
-    cursorObject.execute("DROP DATABASE IF EXISTS testingautodb")
+    cursorObject.execute("DROP DATABASE IF EXISTS mfl_interface_db")
 
     # creating database
-    cursorObject.execute("CREATE DATABASE IF NOT EXISTS testingautodb")
+    cursorObject.execute("CREATE DATABASE IF NOT EXISTS mfl_interface_db")
     call_command("migrate", interactive=False)
 
     # fetch the facility data
@@ -32,7 +32,7 @@ def create_db():
     data = json.loads(response.content)
 
     # save fetched data in the db
-    cursorObject.execute("USE testingautodb")
+    cursorObject.execute("USE mfl_interface_db")
     add_facility_data = "insert into facilities_ipdata(city, country, lat, lon) value(%s, %s, %s, %s)"
     data = (data['city'], data['country'], data['lat'], data['lon'])
     cursorObject.execute(add_facility_data, data)

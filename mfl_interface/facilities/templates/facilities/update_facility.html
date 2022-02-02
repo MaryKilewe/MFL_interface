@@ -1,0 +1,71 @@
+{% extends 'facilities/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <section class="mx-5">
+        <form action="" method="post" class="form-control">
+            {% csrf_token %}
+            <legend>Update Facility details</legend>
+            <div class="row mb-4">
+              <div class="form-group col-md-2 mb-0">
+                {{ form.mfl_code|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-4 mb-0">
+                {{ form.name|as_crispy_field }}
+              </div>
+                <div class="form-group col-md-4 mb-0">
+                {{ form.owner|as_crispy_field }}
+              </div>
+            </div>
+                <div class="row mb-4">
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.county|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.sub_county|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.lat|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.lon|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="form-group col-md-6 mb-0">
+                        {{ form.partner|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        {{ form.agency|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="form-group col-md-4 mb-0">
+                        {{ form.implementation|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        {{ form.emr_type|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4 mb-0">
+                        {{ form.emr_status|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.hts_use|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.deployment|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.hts_status|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.il_status|as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-outline-success">
+        </form>
+    </section>
+{% endblock %}

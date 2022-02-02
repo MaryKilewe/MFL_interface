@@ -22,4 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
-create_db()
+#create_db()

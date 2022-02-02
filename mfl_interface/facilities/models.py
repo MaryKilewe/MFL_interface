@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 # Create your models here.
 
 
@@ -12,7 +12,7 @@ class IPdata(models.Model):
 
 
 class SDP_agencies(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
 
 class Partners(models.Model):
     name = models.CharField(max_length=100)
