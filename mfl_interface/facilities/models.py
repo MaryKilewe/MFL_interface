@@ -66,6 +66,10 @@ class Facility_Info(models.Model):
 class EMR_Info(models.Model):
     type = models.ForeignKey(EMR_type, on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
+    ovc = models.CharField(max_length=10, default=None)
+    otz = models.CharField(max_length=10, default=None)
+    prep = models.CharField(max_length=10, default=None)
+    tb = models.CharField(max_length=10, default=None)
     facility_info = models.ForeignKey(Facility_Info, on_delete=models.CASCADE)
 
 
@@ -88,10 +92,9 @@ class IL_Info(models.Model):
 class MHealth_Info(models.Model):
     # consider Boolean field
     #status = models.CharField(max_length=100)
-    ovc = models.CharField(max_length=10)
-    otz = models.CharField(max_length=10)
-    prep = models.CharField(max_length=10)
-    tb = models.CharField(max_length=10)
+    mshauri = models.BooleanField(default=False)
+    c4c = models.BooleanField(default=False)
+    nishauri = models.BooleanField(default=False)
     facility_info = models.ForeignKey(Facility_Info, on_delete=models.CASCADE)
 
 

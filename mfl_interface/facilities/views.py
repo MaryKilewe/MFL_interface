@@ -40,15 +40,15 @@ def index(request):
         dataObj["partner"] = row.partner.name
         dataObj["agency"] = row.partner.agency.name
         dataObj["implementation"] = implementation_info.ct
-        dataObj["emr_type"] = emr_info.type
+        dataObj["emr_type"] = emr_info.type.type
         dataObj["emr_status"] = emr_info.status
-        dataObj["hts_use"] = hts_info.hts_use_name
-        dataObj["hts_deployment"] = hts_info.deployment
+        dataObj["hts_use"] = hts_info.hts_use_name.hts_use_name
+        dataObj["hts_deployment"] = hts_info.deployment.deployment
         dataObj["hts_status"] = hts_info.status
         dataObj["il_status"] = il_info.status
         dataObj["il_registration_ie"] = il_info.registration_ie
         dataObj["il_pharmacy_ie"] = il_info.pharmacy_ie
-        dataObj["mhealth_ovc"] = mhealth_info.ovc
+        dataObj["mhealth_ovc"] = mhealth_info.nishauri
 
         facilitiesdata.append(dataObj)
 
@@ -96,6 +96,8 @@ def add_facility_data(request):
             # save EMR info
             emr_info = EMR_Info(type=EMR_type.objects.get(pk=int(form.cleaned_data['emr_type'])),
                                  status=form.cleaned_data['emr_status'],
+                                ovc=form.cleaned_data['ovc_offered'], otz=form.cleaned_data['otz_offered'],
+                                prep=form.cleaned_data['prep_offered'], tb=form.cleaned_data['tb_offered'],
                                 facility_info=Facility_Info.objects.get(pk=unique_facility_id))
             emr_info.save()
 
@@ -106,8 +108,8 @@ def add_facility_data(request):
             il_info.save()
 
             # save MHealth info
-            mhealth_info = MHealth_Info(ovc=form.cleaned_data['ovc_offered'], otz=form.cleaned_data['otz_offered'],
-                               prep=form.cleaned_data['prep_offered'], tb=form.cleaned_data['tb_offered'],
+            mhealth_info = MHealth_Info(mshauri=form.cleaned_data['mshauri'], c4c=form.cleaned_data['c4c'],
+                               nishauri=form.cleaned_data['nishauri'],
                                         facility_info=Facility_Info.objects.get(pk=unique_facility_id))
             mhealth_info.save()
 
@@ -133,6 +135,12 @@ def update_facility_data(request, facility_id):
         .select_related('owner').select_related('county')\
         .select_related('sub_county').get(pk=facility_id)
 
+    implementation_info = Implementation_type.objects.get(facility_info=facility_id)
+    emr_info = EMR_Info.objects.select_related('type').get(facility_info=facility_id)
+    hts_info = HTS_Info.objects.get(facility_info=facility_id)
+    il_info = IL_Info.objects.get(facility_info=facility_id)
+    mhealth_info = MHealth_Info.objects.get(facility_info=facility_id)
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = Facility_Data_Form(request.POST)
@@ -140,12 +148,12 @@ def update_facility_data(request, facility_id):
 
         if form.is_valid():
             # Save the new category to the database.
-            Facility_Info.objects.update(mfl_code = form.cleaned_data['mfl_code'],
+            Facility_Info.objects.filter(pk=facility_id).update(mfl_code = form.cleaned_data['mfl_code'],
                 name = form.cleaned_data['name'],
                 county = form.cleaned_data['county'],
                 sub_county = form.cleaned_data['sub_county'],
                 owner = int(form.cleaned_data['owner']),
-                #partner = int(form.cleaned_data['partner']),
+                partner = int(form.cleaned_data['partner']),
                 #facilitydata.agency = facilitydata.partner.agency.name
                 lat = form.cleaned_data['lat'],
                 lon = form.cleaned_data['lon'],
@@ -157,7 +165,39 @@ def update_facility_data(request, facility_id):
                 #il_status = int(form.cleaned_data['il_status']),
             )
 
-            #facility.save(force_update=True)
+            Implementation_type.objects.filter(facility_info=facility_id).update(
+                ct=form.cleaned_data['CT'],
+                hts = form.cleaned_data['HTS'],
+                il = form.cleaned_data['KP'],
+                kp = form.cleaned_data['IL']
+            )
+
+            EMR_Info.objects.filter(facility_info=facility_id).update(
+                type=int(form.cleaned_data['emr_type']),
+                status=form.cleaned_data['emr_status'],
+                ovc=form.cleaned_data['ovc_offered'],
+                otz=form.cleaned_data['otz_offered'],
+                prep=form.cleaned_data['prep_offered'],
+                tb=form.cleaned_data['tb_offered'],
+            )
+
+            HTS_Info.objects.filter(facility_info=facility_id).update(
+                status=form.cleaned_data['hts_status'],
+                hts_use_name=int(form.cleaned_data['hts_use']),
+                deployment=int(form.cleaned_data['hts_deployment']),
+            )
+
+            IL_Info.objects.filter(facility_info=facility_id).update(
+                status=form.cleaned_data['il_status'],
+                registration_ie=form.cleaned_data['registration_ie'],
+                pharmacy_ie=form.cleaned_data['pharmacy_ie'],
+            )
+
+            MHealth_Info.objects.filter(facility_info=facility_id).update(
+                nishauri=form.cleaned_data['ovc_offered'],
+                mshauri=form.cleaned_data['mshauri'],
+                c4c=form.cleaned_data['c4c']
+            )
 
             # Redirect to home (/)
             return HttpResponseRedirect('/facilities')
@@ -177,12 +217,25 @@ def update_facility_data(request, facility_id):
             'agency': facilitydata.partner.agency.name,
             'lat': facilitydata.lat,
             'lon': facilitydata.lon,
-            #'emr_type': facilitydata.emr_type.type,
-            #'emr_status': facilitydata.emr_status.status,
-            #'hts_use': facilitydata.hts_use_and_deployment.hts_use_name,
-            #'deployment': facilitydata.hts_use_and_deployment.deployment,
-            #'hts_status': facilitydata.hts_status.status,
-            #'il_status': facilitydata.il_status.status,
+            'CT': implementation_info.ct,
+            'HTS': implementation_info.hts,
+            'KP': implementation_info.kp,
+            'IL': implementation_info.il,
+            'ovc_offered': emr_info.ovc,
+            'otz_offered': emr_info.otz,
+            'tb_offered': emr_info.tb,
+            'prep_offered': emr_info.prep,
+            'mshauri': mhealth_info.mshauri,
+            'nishauri': mhealth_info.nishauri,
+            'c4c': mhealth_info.c4c,
+            'il_status': il_info.status,
+            'registration_ie': il_info.registration_ie,
+            'pharmacy_ie': il_info.pharmacy_ie,
+            'emr_type': emr_info.type.type,
+            'emr_status': emr_info.status,
+            'hts_use': hts_info.hts_use_name,
+            'hts_deployment': hts_info.deployment,
+            'hts_status': hts_info.status,
         }
         form = Facility_Data_Form(initial=initial_data)
 
@@ -202,7 +255,7 @@ def sub_counties(request):
 
     sub_counties_list =[]
     for row in counties:
-        sub_counties = Sub_counties.objects.filter(county=row.id)
+        sub_counties = Sub_counties.objects.filter(county=row.id).order_by('name')
 
         subObj = {}
         subObj['county'] = row.id
@@ -211,3 +264,18 @@ def sub_counties(request):
         sub_counties_list.append(subObj)
 
     return JsonResponse(sub_counties_list, safe=False)
+
+
+def get_partners_list(request):
+    partners = Partners.objects.select_related('agency').all()
+
+    partners_list =[]
+    for row in partners:
+
+        partnerObj = {}
+        partnerObj['partner'] = row.id
+        partnerObj['agency'] = {'id': row.agency.id, 'name': row.agency.name}
+
+        partners_list.append(partnerObj)
+
+    return JsonResponse(partners_list, safe=False)

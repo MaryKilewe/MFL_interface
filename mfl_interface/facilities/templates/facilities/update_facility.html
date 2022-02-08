@@ -35,10 +35,10 @@
                     </div>
 
                     <div class="form-group col-md-6 mb-4">
-                        {{ form.partner|as_crispy_field }}
+                        {{ form.agency|as_crispy_field }}
                     </div>
                     <div class="form-group col-md-6 mb-4">
-                        {{ form.agency|as_crispy_field }}
+                        {{ form.partner|as_crispy_field }}
                     </div>
 
                     <div class="form-group col-md-4 mb-4">
@@ -59,11 +59,25 @@
                     <h6 id="EMR_toggle" class="green_text_color">EMR Information</h6>
                 </div>
                 <div id="EMR" class="row section mb-4 col-md-10">
-                    <div class="form-group col-md-4 mb-0">
+                    <div class="form-group col-md-4 mb-4">
                         {{ form.emr_type|as_crispy_field }}
                     </div>
-                    <div class="form-group col-md-4 mb-0">
+                    <div class="form-group col-md-4 mb-4">
                         {{ form.emr_status|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-4 mb-4"></div>
+
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.ovc_offered|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.otz_offered|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.prep_offered|as_crispy_field }}
+                    </div>
+                    <div class="form-group col-md-3 mb-0">
+                        {{ form.tb_offered|as_crispy_field }}
                     </div>
                 </div>
             </div>
@@ -108,19 +122,12 @@
                 <div class="col-md-2">
                     <h6 id="MHealth_toggle" class="green_text_color">MHealth Information</h6>
                 </div>
-                <div id="MHealth" class="row section mb-4 col-md-10">
-                    <div class="form-group col-md-3 mb-0">
-                        {{ form.ovc_offered|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {{ form.otz_offered|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {{ form.prep_offered|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-3 mb-0">
-                        {{ form.tb_offered|as_crispy_field }}
-                    </div>
+                <div id="MHealth" class="row section mb-4 col-md-4">
+                    <div class="d-flex justify-content-between">
+                            {{ form.mshauri|as_crispy_field }}
+                            {{ form.nishauri|as_crispy_field }}
+                            {{ form.c4c|as_crispy_field }}
+                        </div>
                 </div>
             </div>
 
@@ -128,31 +135,7 @@
         </form>
     </section>
 
-<script>
-$(document).ready(function() {
-        $(".section").css("display", "none");
+    {% load static %}
+    <script src="{% static 'js/facilities_form.js' %}"></script>>
 
-         $.getJSON('http://127.0.0.1:8000/facilities/sub_counties', function(data) {
-            console.log(data)
-            localStorage.setItem('subcounties', data); //store a key/value
-            var retrievedsubcounty = localStorage.getItem('subcounties');
-            console.log(retrievedsubcounty)
-
-            \\for (let i = 0; i < retrievedsubcounty.length; i++) {
-            \\ console.log(i)
-                \\if(i['county'] == 44){
-                \\    console.log(i['sub_county'])
-                \\}
-            \\}
-                \\var hasVal = Object.values(retrievedsubcounty).includes(44);
-                \\console.log(hasVal)
-
-         });
-    });
-
-$("h5").click(function(){
-    var section = $(this).attr('id').split('_');
-    $("#"+section).slideToggle();
-});
-</script>
 {% endblock %}

@@ -19,6 +19,7 @@ from .one_time_startup import create_db
 
 urlpatterns = [
     path('facilities/', include('facilities.urls')),
+    path('user/', include('users.urls')),
     path('admin/', admin.site.urls),
 ]
 
