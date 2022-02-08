@@ -3,6 +3,7 @@
 {% block content %}
 
 <section class="mx-4">
+    <a href="/facilities/add_facility" class="btn btn-outline-success pull-right">Add Facility</a>
     <h2>Facilities Data</h2>
 
     <table id="facilities_list" class="display">
@@ -31,20 +32,20 @@
             <tr>
                 <td><a href="/facilities/update_facility/{{data.id}}">{{data.mfl_code}}<i class="fas fa-check"></i></a></td>
                 <td>{{data.name}}</td>
-                <td>{{data.county}}</td>
-                <td>{{data.sub_county}}</td>
-                <td>{{data.owner.name}}</td>
+                <td>{{data.county.name}}</td>
+                <td>{{data.sub_county.name}}</td>
+                <td>{{data.owner}}</td>
                 <td>{{data.lat}}</td>
                 <td>{{data.lon}}</td>
-                <td>{{data.partner.name}}</td>
-                <td>{{data.partner.agency.name}}</td>
-                <td>{{data.implementation.type}}</td>
-                <td>{{data.emr_type.type}}</td>
-                <td>{{data.emr_status.status}}</td>
-                <td>{{data.hts_use_and_deployment.hts_use_name}}</td>
-                <td>{{data.hts_use_and_deployment.deployment}}</td>
-                <td>{{data.hts_status.status}}</td>
-                <td>{{data.il_status.status}}</td>
+                <td>{{data.partner}}</td>
+                <td>{{data.agency}}</td>
+                <td>{{data.implementation}}</td>
+                <td>{{data.emr_type}}</td>
+                <td>{{data.emr_status}}</td>
+                <td>{{data.hts_use}}</td>
+                <td>{{data.hts_deployment}}</td>
+                <td>{{data.hts_status}}</td>
+                <td>{{data.il_status}}</td>
             </tr>
             {% endfor %}
         </tbody>
